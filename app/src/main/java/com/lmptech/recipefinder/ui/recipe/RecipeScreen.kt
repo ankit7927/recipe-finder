@@ -6,7 +6,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,10 +45,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,15 +55,14 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.lmptech.recipefinder.data.models.bulk.BulkRecipeModel
 import com.lmptech.recipefinder.data.models.bulk.ExtendedIngredient
-import com.lmptech.recipefinder.data.models.recipe.RecipeModel
 import com.lmptech.recipefinder.ui.AppViewModelProvider
 import com.lmptech.recipefinder.ui.navigation.NavigationDestination
 
 object RecipeDestination : NavigationDestination {
-    const val recipeId: String = "recipeId"
+    const val RECIPE_ID: String = "recipeId"
     override val route: String = "recipe"
 
-    val routeWithArg: String = "$route/{$recipeId}"
+    val routeWithArg: String = "$route/{$RECIPE_ID}"
 }
 
 @Composable
@@ -229,7 +224,7 @@ fun IngredientRow(ingredient:List<ExtendedIngredient>) {
 }
 
 @Composable
-fun Ingredient(image:String, name:String) {
+fun Ingredient(image:String?, name:String) {
     Column(modifier = Modifier
         .padding(horizontal = 12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         AsyncImage(

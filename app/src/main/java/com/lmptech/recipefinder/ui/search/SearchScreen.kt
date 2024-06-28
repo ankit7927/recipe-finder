@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lmptech.recipefinder.data.models.recipe.RecipeModel
+import com.lmptech.recipefinder.data.models.search.RecipeResult
 import com.lmptech.recipefinder.ui.AppViewModelProvider
 import com.lmptech.recipefinder.ui.home.HorizontalCard
 import com.lmptech.recipefinder.ui.navigation.NavigationDestination
@@ -54,34 +55,31 @@ fun SearchScreen(
     }
 
     val selectedRecipe = remember {
-        mutableStateOf<RecipeModel?>(null)
+        mutableStateOf<RecipeResult?>(null)
     }
 
     val coroutine = rememberCoroutineScope()
-    val sheetState: SheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
+    val sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val searchUiState by searchViewModel.searchUiState.collectAsState()
 
     Scaffold (
         topBar = {
             SearchBar(
-                leadingIcon = { IconButton(onClick = { navigateBack.invoke() }) {
-
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
-                }},
-                placeholder = { Text(text = "Search recipe")},
+                leadingIcon = {
+                    IconButton(onClick = { navigateBack.invoke() }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
+                    }
+                },
+                placeholder = { Text(text = "Search recipe") },
                 query = searchUiState.query,
-                onQueryChange = {searchViewModel.onQueryChange(it)},
+                onQueryChange = { searchViewModel.onQueryChange(it) },
                 onSearch = {},
                 active = false,
                 onActiveChange = {},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-            ) {
-
-            }
+            ) {}
         }
     ) { paddingValues ->
         if (searchUiState.loading) {
@@ -95,16 +93,14 @@ fun SearchScreen(
                     .padding(paddingValues)
                     .padding(top = 12.dp)
             ) {
-
                 items(items = data.result, key = { it.id }) {
-                    ListItem(
-                        leadingContent = {
-                            Icon(
-                                imageVector = Icons.Default.ShoppingCart,
-                                contentDescription = ""
-                            )
-                        },
-                        headlineContent = { Text(text = it.title) }, modifier = Modifier.clickable {
+                    ListItem(leadingContent = {
+                        Icon(
+                            imageVector = Icons.Default.ShoppingCart, contentDescription = ""
+                        )
+                    },
+                        headlineContent = { Text(text = it.title) },
+                        modifier = Modifier.clickable {
                             selectedRecipe.value = it
                             sheetVisible.value = true
                             coroutine.launch {

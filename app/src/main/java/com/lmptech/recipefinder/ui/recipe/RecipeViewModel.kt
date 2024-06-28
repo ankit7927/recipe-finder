@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lmptech.recipefinder.data.models.bulk.BulkRecipeModel
 import com.lmptech.recipefinder.data.models.recipe.FavoriteRecipeModel
-import com.lmptech.recipefinder.data.models.recipe.RecipeModel
 import com.lmptech.recipefinder.data.repositories.FavoriteRepository
 import com.lmptech.recipefinder.data.repositories.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +47,8 @@ class RecipeViewModel(
     private val recipeRepository: RecipeRepository,
     private val favoriteRepository: FavoriteRepository
 ) : ViewModel() {
-    private var recipeId: Int? = savedStateHandle[RecipeDestination.recipeId]
+
+    private var recipeId: Int? = savedStateHandle[RecipeDestination.RECIPE_ID]
 
     private val recipeViewModelState: MutableStateFlow<RecipeViewModelState> = MutableStateFlow(
         RecipeViewModelState(loading = true)
@@ -61,11 +61,20 @@ class RecipeViewModel(
 
     init {
         if (recipeId!==null) {
-            viewModelScope.launch {
-                val recipeById = recipeRepository.getRecipeById(715538)
-                if (recipeById.isSuccessful && recipeById.body() !== null) {
-                    recipeViewModelState.emit(RecipeViewModelState().copy(recipeModel = recipeById.body()))
-                }
+            getRecipeInformation(recipeId.toString())
+        }
+    }
+
+    fun getRecipeInformation(recipeId:String) {
+        viewModelScope.launch {
+            val recipeById = recipeRepository.getRecipeInformation(recipeId)
+            if (recipeById.isSuccessful && recipeById.body() !== null) {
+
+                recipeViewModelState.emit(
+                    RecipeViewModelState().copy(
+                        recipeModel = recipeById.body()!!.first()
+                    )
+                )
             }
         }
     }
@@ -74,12 +83,6 @@ class RecipeViewModel(
     fun addToFav(recipeModel: BulkRecipeModel){
         viewModelScope.launch {
             favoriteRepository.addFavoriteRecipe(FavoriteRecipeModel(recipeModel.id, recipeModel.title, recipeModel.image, recipeModel.readyInMinutes.toString()))
-        }
-    }
-
-    fun removeToFav(recipeModel: BulkRecipeModel) {
-        viewModelScope.launch {
-            favoriteRepository.removeFavoriteRecipe(FavoriteRecipeModel(recipeModel.id, recipeModel.title, recipeModel.image, recipeModel.readyInMinutes.toString()))
         }
     }
 

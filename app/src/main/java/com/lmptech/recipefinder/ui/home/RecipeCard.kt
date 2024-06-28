@@ -36,10 +36,11 @@ import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.lmptech.recipefinder.data.models.random.Recipe
 import com.lmptech.recipefinder.data.models.recipe.RecipeModel
 
 @Composable
-fun VerticalCard(recipeModel: RecipeModel, recipeClicked: (Int)->Unit) {
+fun VerticalCard(recipeModel: Recipe, recipeClicked: (Int)->Unit) {
 
     Box(
         contentAlignment = Alignment.BottomStart,
@@ -104,7 +105,7 @@ fun VerticalCard(recipeModel: RecipeModel, recipeClicked: (Int)->Unit) {
 
 
 @Composable
-fun HorizontalCard(recipeModel: RecipeModel, recipeClicked: (Int)->Unit) {
+fun HorizontalCard(recipeModel: Recipe, recipeClicked: (Int)->Unit) {
 
     Surface(modifier = Modifier
         .fillMaxWidth()

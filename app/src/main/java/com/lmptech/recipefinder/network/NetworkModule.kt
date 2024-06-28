@@ -1,6 +1,7 @@
 package com.lmptech.recipefinder.network
 
 import com.lmptech.recipefinder.network.services.RecipeApiService
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -8,14 +9,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 class NetworkModule private constructor() {
 
     companion object {
-        private const val BASE_URL = "http://192.168.236.24:4000/"
+        private const val BASE_URL = "https://api.spoonacular.com/"
         @Volatile
         private var instance: Retrofit? = null
+
+        private val client = OkHttpClient.Builder()
+            .addInterceptor(ApiKeyInterceptor())
+            .build()
 
         private fun createRetrofit(): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build()
         }
 

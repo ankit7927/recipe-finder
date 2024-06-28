@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Recipe Finder</string>
+    <string name="api_key">f37528ed31b44ac4a8402a0dc9900100</string>
 </resources>

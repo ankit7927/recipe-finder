@@ -35,7 +35,7 @@ fun RecipeNavigationGraph(navController: NavHostController = rememberNavControll
         }
 
         composable(route = RecipeDestination.routeWithArg,
-            arguments = listOf(navArgument(name = RecipeDestination.recipeId) {
+            arguments = listOf(navArgument(name = RecipeDestination.RECIPE_ID) {
                 type = NavType.IntType
             })
         ) {

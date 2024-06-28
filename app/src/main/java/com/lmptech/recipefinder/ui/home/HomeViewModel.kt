@@ -2,6 +2,7 @@ package com.lmptech.recipefinder.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lmptech.recipefinder.data.models.random.Recipe
 import com.lmptech.recipefinder.data.models.recipe.RecipeModel
 import com.lmptech.recipefinder.data.repositories.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,30 +14,23 @@ import kotlinx.coroutines.launch
 
 data class HomeState(
     val query:String = "",
-    val searchActive:Boolean = false,
     val loading: Boolean = false,
-    val recipes:List<RecipeModel> = emptyList()
+    val recipes:List<Recipe> = emptyList()
 )
 
 
 class HomeViewModel(private val recipeRepository: RecipeRepository) : ViewModel() {
-    private val homeState2:MutableStateFlow<HomeState> = MutableStateFlow(HomeState().copy(loading = true))
+    private val homeState:MutableStateFlow<HomeState> = MutableStateFlow(HomeState().copy(loading = true))
 
     val homeUiState:StateFlow<HomeState>
-        get() = homeState2
+        get() = homeState
 
     init {
         viewModelScope.launch {
             val data = recipeRepository.getRecipes()
             if (data.isSuccessful && data.body() != null) {
-                homeState2.emit(HomeState().copy(loading = false, recipes = data.body()!!.data))
+                homeState.emit(HomeState().copy(loading = false, recipes = data.body()!!.recipes))
             }
-        }
-    }
-
-    fun onSearchActiveChange(change:Boolean) {
-        viewModelScope.launch {
-            homeState2.emit(HomeState().copy(searchActive = change))
         }
     }
 }
